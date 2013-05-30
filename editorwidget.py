@@ -35,6 +35,7 @@ class EditorWidget(BoxLayout):
     m_oEditorInput = None
     m_bIsModified = False
     m_bIgnoredFirstTextChange = False
+    m_oLineLabel = None
     
     def __init__(self, oMainWidget, oParentTab, filename, **kwargs):
         super(EditorWidget, self).__init__(**kwargs)
@@ -56,8 +57,6 @@ class EditorWidget(BoxLayout):
         self.textscroll.add_widget(self.m_oEditorInput)
 
         buttonslayout = BoxLayout(orientation = "horizontal",size_hint=(1, 0.1))
-        # buttonslayout.add_widget(Button(text="New",size_hint=(0.1, 1)))
-        # buttonslayout.add_widget(Button(text="Open",size_hint=(0.1, 1)))
 
         savebutton = Button(text="Save",size_hint=(0.1, 1))
         buttonslayout.add_widget(savebutton)
@@ -71,6 +70,10 @@ class EditorWidget(BoxLayout):
         buttonslayout.add_widget(closebutton)
         closebutton.bind(on_release = self.on_close_button)
         
+        self.m_oLineLabel = Label(text=self.get_cursor_pos_string(),size_hint=(0.1, 1))
+        buttonslayout.add_widget(self.m_oLineLabel)
+        self.m_oEditorInput.bind(cursor_pos = self.on_cursor_pos_changed)
+        
         self.add_widget(buttonslayout)
         
         self.editorlabel = Label(text=(self.m_strFilename 
@@ -80,6 +83,12 @@ class EditorWidget(BoxLayout):
         self.m_bIsModified = False
         self.set_tab_name()
         
+    def on_cursor_pos_changed(self, instance, value):
+        self.m_oLineLabel.text = self.get_cursor_pos_string()
+        
+    def get_cursor_pos_string(self):
+        return "Ln %d Col %d" % (self.m_oEditorInput.cursor_row + 1, self.m_oEditorInput.cursor_col + 1)
+    
     def on_close_button(self, instance):
         self.m_oMainWidget.remove_tab(self.m_oParentTab)
         
