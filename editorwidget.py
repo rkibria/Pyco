@@ -90,7 +90,16 @@ class EditorWidget(BoxLayout):
         return "Ln %d Col %d" % (self.m_oEditorInput.cursor_row + 1, self.m_oEditorInput.cursor_col + 1)
     
     def on_close_button(self, instance):
-        self.m_oMainWidget.remove_tab(self.m_oParentTab)
+        if self.m_bIsModified:
+            self.yesnopopup = QuestionYesNoPopup("Close editor", 
+                "You have unsaved changes, really close?", 
+                self.close_callback)
+        else:
+            self.close_callback(True)
+    
+    def close_callback(self, bAnswer):
+        if bAnswer:
+            self.m_oMainWidget.remove_tab(self.m_oParentTab)
         
     def on_run_button(self, instance):
         self.m_oMainWidget.run_script(self.m_oEditorInput.text)
@@ -99,7 +108,7 @@ class EditorWidget(BoxLayout):
         if self.m_strFilename != None:
             self.write_to_file()
         else:
-            FilePopup(self.on_save_as_file, "Save As")
+            self.filepopup = FilePopup(self.on_save_as_file, "Save As")
     
     def write_to_file(self):
         if self.m_strFilename != None:
