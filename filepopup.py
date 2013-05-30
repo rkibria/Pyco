@@ -26,13 +26,13 @@ from kivy.uix.filechooser import FileChooserListView
 from kivy.uix.popup import Popup
 from kivy.uix.textinput import TextInput
 
-class OpenPopup:
+class FilePopup:
     m_fctOpenCallback = None
     
     def __init__(self, open_callback, popuptitle):
         self.m_fctOpenCallback = open_callback
         layout = BoxLayout(orientation="vertical")
-        self.selection = TextInput(multiline=False,text=os.getcwd()+"/",
+        self.selection = TextInput(multiline=False,text=os.getcwd() + os.sep,
             readonly=False,size_hint=(1,0.1),focus=True)
         layout.add_widget(self.selection)
         filechooser = FileChooserListView(filters=["*.py","*.txt"],path=os.getcwd())

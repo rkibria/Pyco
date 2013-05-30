@@ -25,7 +25,7 @@ from kivy.uix.textinput import TextInput
 import os
 import kivy.resources
 from kivy.uix.scrollview import ScrollView
-from filepopups import OpenPopup
+from filepopup import FilePopup
 
 class EditorWidget(BoxLayout):
     m_oMainWidget = None
@@ -88,7 +88,7 @@ class EditorWidget(BoxLayout):
         if self.m_strFilename != None:
             self.write_to_file()
         else:
-            OpenPopup(self.on_save_as_file, "Save As")
+            FilePopup(self.on_save_as_file, "Save As")
     
     def write_to_file(self):
         if self.m_strFilename != None:

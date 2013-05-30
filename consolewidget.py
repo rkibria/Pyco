@@ -27,7 +27,7 @@ from kivy.uix.button import Button
 from cStringIO import StringIO
 import kivy.resources
 
-from filepopups import OpenPopup
+from filepopup import FilePopup
 
 class ConsoleWidget(BoxLayout):
     m_oMainWidget = None
@@ -116,7 +116,7 @@ class ConsoleWidget(BoxLayout):
         self.m_oMainWidget.create_editor_tab()
     
     def on_console_open_editor(self, instance):
-        OpenPopup(self.on_open_file, "Open")
+        FilePopup(self.on_open_file, "Open")
 
     def on_open_file(self, filename):
         self.m_oMainWidget.create_editor_tab(filename)
