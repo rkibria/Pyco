@@ -1,0 +1,4 @@
+title=Pyco
+author=Raihan Kibria
+orientation=landscape
+fullscreen=0
