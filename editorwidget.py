@@ -25,7 +25,9 @@ from kivy.uix.textinput import TextInput
 import os
 import kivy.resources
 from kivy.uix.scrollview import ScrollView
+
 from filepopup import FilePopup
+from questionyesnopopup import QuestionYesNoPopup
 
 class EditorWidget(BoxLayout):
     m_oMainWidget = None
@@ -98,9 +100,22 @@ class EditorWidget(BoxLayout):
             self.set_tab_name()
     
     def on_save_as_file(self, filename):
+        if os.path.isfile(filename):
+            self.overwritefilename = filename
+            self.yesnopopup = QuestionYesNoPopup("Save", 
+                "Overwrite file %s?" % filename, 
+                self.save_overwrite_callback)
+        else:
+            self.do_write(filename)
+    
+    def do_write(self, filename):
         self.m_strFilename = filename
         self.editorlabel.text = self.m_strFilename
         self.write_to_file()
+    
+    def save_overwrite_callback(self, bAnswer):
+        if bAnswer:
+            self.do_write(self.overwritefilename)
     
     def on_text_changed(self, instance, value):
         if self.m_bIgnoredFirstTextChange == False:
