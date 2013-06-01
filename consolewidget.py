@@ -21,7 +21,6 @@ kivy.require('1.7.0')
 import sys
 from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.textinput import TextInput
-from kivy.uix.codeinput import CodeInput
 from kivy.uix.stacklayout import StackLayout
 from kivy.uix.label import Label
 from kivy.uix.button import Button
@@ -68,7 +67,7 @@ class ConsoleWidget(BoxLayout):
         buttonslayout.add_widget(btn5)
         self.add_widget(buttonslayout)
         
-        self.consoleoutput = CodeInput(multiline=True,text="Python "+sys.version+"\n",readonly=True,
+        self.consoleoutput = TextInput(multiline=True,text="Python "+sys.version+"\n",readonly=True,
             font_name=kivy.resources.resource_find("DroidSansMonoDotted.ttf"))
         self.add_widget(self.consoleoutput)
         
@@ -124,7 +123,7 @@ class ConsoleWidget(BoxLayout):
     
     def make_consoleinput(self):
         self.inputlayout.clear_widgets()
-        self.consoleinput = CodeInput(multiline=False,focus=True,
+        self.consoleinput = TextInput(multiline=False,focus=True,
             font_name=kivy.resources.resource_find("DroidSansMonoDotted.ttf"))
         self.consoleinput.bind(on_text_validate = self.on_command_entered)
         self.inputlayout.add_widget(self.consoleinput)

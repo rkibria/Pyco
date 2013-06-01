@@ -21,10 +21,10 @@ kivy.require('1.7.0')
 from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.button import Button
 from kivy.uix.label import Label
+from kivy.uix.textinput import TextInput
 import os
 import kivy.resources
 from kivy.uix.scrollview import ScrollView
-from kivy.uix.codeinput import CodeInput
 
 from filepopup import FilePopup
 from questionyesnopopup import QuestionYesNoPopup
@@ -50,7 +50,7 @@ class EditorWidget(BoxLayout):
         self.textscroll = ScrollView(size_hint=(1,1))
         self.scrollcontainer.add_widget(self.textscroll)
         loadedtext = self.load_file()
-        self.m_oEditorInput = CodeInput(multiline=True,size_hint_y = None,focus=True,
+        self.m_oEditorInput = TextInput(multiline=True,size_hint_y = None,focus=True,
             auto_indent=True,font_name=kivy.resources.resource_find("DroidSansMonoDotted.ttf"),
             text=loadedtext, height=((loadedtext.count("\n") + 1) * 18 + 640))
         self.m_oEditorInput.bind(text = self.on_text_changed)
