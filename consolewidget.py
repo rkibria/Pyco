@@ -19,6 +19,7 @@ import kivy
 kivy.require('1.7.0')
 
 import sys
+import traceback
 from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.textinput import TextInput
 from kivy.uix.stacklayout import StackLayout
@@ -101,7 +102,8 @@ class ConsoleWidget(BoxLayout):
             sys.stdout = old_stdout
             return redirected_output.getvalue()
         except Exception, e:
-            return "ERROR: " + str(e) + "\n"
+            errorstring = traceback.format_exc()
+            return ("ERROR: " + errorstring + "\n")
         
     def on_command_entered(self, instance):
         cmdline = instance.text
