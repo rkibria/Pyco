@@ -1,6 +1,6 @@
 # Copyright 2013 Raihan Kibria
 #
-# This file is part of Pyco.
+# This file is part of Pyco https://github.com/rkibria/Pyco
 #
 # Pyco is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -16,7 +16,7 @@
 # along with Pyco.  If not, see <http://www.gnu.org/licenses/>.
 
 import kivy
-kivy.require('1.7.0')
+kivy.require('1.8.0')
 
 from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.button import Button
@@ -26,6 +26,7 @@ import os
 import kivy.resources
 from kivy.uix.scrollview import ScrollView
 from kivy.core.clipboard import Clipboard
+from kivy.logger import Logger
 
 from filepopup import FilePopup
 from questionyesnopopup import QuestionYesNoPopup
@@ -54,11 +55,15 @@ class EditorWidget(BoxLayout):
         loadedtext = self.load_file()
         self.m_oEditorInput = TextInput(multiline=True,size_hint_y = None,focus=True,
             auto_indent=True,font_name=kivy.resources.resource_find("DroidSansMonoDotted.ttf"),
-            text=loadedtext, height=((loadedtext.count("\n") + 1) * 18 + 640))
-        self.m_oEditorInput.bind(text = self.on_text_changed)
+            text=loadedtext)
+        self.m_oEditorInput.bind(text = self.on_text_changed, size=lambda dt, x: self.set_edit_size())
         self.textscroll.add_widget(self.m_oEditorInput)
 
         buttonslayout = BoxLayout(orientation = "horizontal",size_hint=(1, 0.1))
+
+        runbutton = Button(text="Run",size_hint=(0.1, 1))
+        buttonslayout.add_widget(runbutton)
+        runbutton.bind(on_release = self.on_run_button)
 
         filebutton = Button(text="File",size_hint=(0.1, 1))
         buttonslayout.add_widget(filebutton)
@@ -80,9 +85,31 @@ class EditorWidget(BoxLayout):
         
         self.m_bIsModified = False
         self.set_tab_name()
+        self.set_edit_size()
         
     def on_cursor_pos_changed(self, instance, value):
         self.m_oLineLabel.text = self.get_cursor_pos_string()
+        self.scroll_cursor_visible()
+
+    def scroll_cursor_visible(self):
+        # current_scroll_y = self.textscroll.scroll_y
+        # bottom_cursor_row = (1.0 - current_scroll_y) * text_lines
+        
+        # textinput_height = self.textscroll.height
+        # font_height_pixels = self.m_oEditorInput.font_size
+        # visible_rows = textinput_height / font_height_pixels
+        
+        # top_cursor_row = bottom_cursor_row - visible_rows
+        # Logger.debug("top: %d, bottom: %d" % (top_cursor_row, bottom_cursor_row))
+        
+        # visible_text_rows = self.textscroll.viewport_size[1] / font_height_pixels
+        
+        text_lines = self.m_oEditorInput.text.count('\n') + 1
+        cursor_row = self.m_oEditorInput.cursor_row + 1
+        scroll_y = (1.0 - (cursor_row / float(text_lines)))
+        if abs(cursor_row - text_lines) <= 1:
+            scroll_y = 0.0
+        self.textscroll.scroll_y = scroll_y
         
     def get_cursor_pos_string(self):
         return "Ln %d Col %d" % (self.m_oEditorInput.cursor_row + 1, self.m_oEditorInput.cursor_col + 1)
@@ -91,7 +118,6 @@ class EditorWidget(BoxLayout):
         self.chooseoptionpopup = ChooseOptionPopup("File", 
             [
              ("Save", self.on_save_button), 
-             ("Run", self.on_run_button), 
              ("", None),
              ("Close", self.on_close_button),
              ]
@@ -235,7 +261,7 @@ class EditorWidget(BoxLayout):
         if bAnswer:
             self.m_oMainWidget.remove_tab(self.m_oParentTab)
         
-    def on_run_button(self):
+    def on_run_button(self, instance):
         self.m_oMainWidget.run_script(self.m_oEditorInput.text)
     
     def on_save_button(self):
@@ -276,11 +302,11 @@ class EditorWidget(BoxLayout):
         self.m_bIsModified = True
         self.set_tab_name()
         self.set_edit_size()
+        self.scroll_cursor_visible()
     
     def set_edit_size(self):
-        self.m_oEditorInput.height = ((self.m_oEditorInput.text.count("\n") + 1) 
-            * self.m_oEditorInput.line_height + 640)
-    
+        self.m_oEditorInput.height = max(self.m_oEditorInput.minimum_height, self.textscroll.height)
+        
     def load_file(self):
         loadedtext = ""
         if self.m_strFilename and self.m_strFilename != "":

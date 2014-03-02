@@ -1,6 +1,6 @@
 # Copyright 2013 Raihan Kibria
 #
-# This file is part of Pyco.
+# This file is part of Pyco https://github.com/rkibria/Pyco
 #
 # Pyco is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -15,8 +15,14 @@
 # You should have received a copy of the GNU General Public License
 # along with Pyco.  If not, see <http://www.gnu.org/licenses/>.
 
+from kivy.config import Config
+Config.set("input", "mouse", "mouse,disable_multitouch")
+Config.set('graphics', 'resizable', 0)
+Config.set('graphics', 'width', 800)
+Config.set('graphics', 'height', 480)
+
 import kivy
-kivy.require('1.7.0')
+kivy.require('1.8.0')
 
 from kivy.app import App
 from kivy.uix.tabbedpanel import TabbedPanel
@@ -24,6 +30,10 @@ from kivy.uix.tabbedpanel import TabbedPanelItem
 
 from consolewidget import ConsoleWidget
 from editorwidget import EditorWidget
+import configfile
+
+configfile.open()
+configfile.get_int("dummy", 0)
 
 class PythonConsole(TabbedPanel):
     def __init__(self, **kwargs):

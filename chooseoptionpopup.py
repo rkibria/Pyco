@@ -16,7 +16,7 @@
 # along with Pyco.  If not, see <http://www.gnu.org/licenses/>.
 
 import kivy
-kivy.require('1.7.0')
+kivy.require('1.8.0')
 
 import os
 from kivy.uix.label import Label

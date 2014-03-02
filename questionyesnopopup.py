@@ -1,6 +1,6 @@
 # Copyright 2013 Raihan Kibria
 #
-# This file is part of Pyco.
+# This file is part of Pyco https://github.com/rkibria/Pyco
 #
 # Pyco is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -16,7 +16,7 @@
 # along with Pyco.  If not, see <http://www.gnu.org/licenses/>.
 
 import kivy
-kivy.require('1.7.0')
+kivy.require('1.8.0')
 
 import os
 from kivy.uix.label import Label
